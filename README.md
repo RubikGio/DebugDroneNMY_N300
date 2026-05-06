@@ -31,14 +31,14 @@ Questa la pseudo struttura, da questa vado ad analizzare ogni opcode che signifi
 | 0x6E | 110 | Suppongo sia una funzione che ha un riferimento al GPS che prevede la funzione di circondare il soggetto | 70-72-60-110-variabile_2byte-coordinate-check | riga 569/148 e.java | 
 
 
-Considera che ci sono per **Opcode 100 e 101** una serie di varianti nel senso che nel codice se l'opcode è 100 o 101 può anche presentarsi una valutazione differente riportata da riga 507 del file e.java. 
-Altra valutazione riguarda l'**Opcode 102** con "variabile" che può rappresentare ad esempio calibrazione gps o magnetica e in quel caso sono numeri specifici. 
-Per **Opcode 104** è da ben valutare tutta il vero uso ci sono valori multipli per un valore Y che non è ben chiaro ancora cosa sia ma che può assumere valori molteplici da inserire nel payload. 
-Per **Opcode 105** c'è una valutazione sul comando, c'è una variabile "this.h0" che viene chiamata e assegnato il _byte b_ a questa variabile e usato come payload. 
-Per **Opcode 106** sarebbero i veri comandi di volo da inviare al drone con tutte le informazioni necessarie, da valutare se i campi da riportati sono corretti.
-Per **Opcode 107** serve a definire delle coordinate da riferire, attenzione che per leggere le coordinate son due numeri da 16 bit quindi la lettura dei byte va due a due.
-Per **Opcode 108** la lunghezza come si vede dalla costruzione è variabile mentre i valori del GPS usati nel payload dipendono appunto dalla grandezza precedentemente definita.
-Per **Opcode 109** mi sembra molto simile a quanto visto per il precedente opcode però questo vedo che immette comandi di latitudine e longitudine.
-Per **Opcode 110** usata in combinazione con qualche altra funzione ma come descritto prevede di circondare il soggetto.
+- Considera che ci sono per **Opcode 100 e 101** una serie di varianti nel senso che nel codice se l'opcode è 100 o 101 può anche presentarsi una valutazione differente riportata da riga 507 del file e.java. 
+- Altra valutazione riguarda l'**Opcode 102** con "variabile" che può rappresentare ad esempio calibrazione gps o magnetica e in quel caso sono numeri specifici. 
+- Per **Opcode 104** è da ben valutare tutta il vero uso ci sono valori multipli per un valore Y che non è ben chiaro ancora cosa sia ma che può assumere valori molteplici da inserire nel payload. 
+- Per **Opcode 105** c'è una valutazione sul comando, c'è una variabile "this.h0" che viene chiamata e assegnato il _byte b_ a questa variabile e usato come payload. 
+- Per **Opcode 106** sarebbero i veri comandi di volo da inviare al drone con tutte le informazioni necessarie, da valutare se i campi da riportati sono corretti.
+- Per **Opcode 107** serve a definire delle coordinate da riferire, attenzione che per leggere le coordinate son due numeri da 16 bit quindi la lettura dei byte va due a due.
+- Per **Opcode 108** la lunghezza come si vede dalla costruzione è variabile mentre i valori del GPS usati nel payload dipendono appunto dalla grandezza precedentemente definita.
+- Per **Opcode 109** mi sembra molto simile a quanto visto per il precedente opcode però questo vedo che immette comandi di latitudine e longitudine.
+- Per **Opcode 110** usata in combinazione con qualche altra funzione ma come descritto prevede di circondare il soggetto.
 
 
