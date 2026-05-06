@@ -30,6 +30,8 @@ Questa la pseudo struttura, da questa vado ad analizzare ogni opcode che signifi
 | 0x6D | 109 | Suppongo sia una funzione che costruisce il payload delle coordinate | 70-72-60-109-variabile_2byte-coordinate-check | riga 119 file e.java | 
 | 0x6E | 110 | Suppongo sia una funzione che ha un riferimento al GPS che prevede la funzione di circondare il soggetto | 70-72-60-110-variabile_2byte-coordinate-check | riga 569/148 e.java | 
 
+**IMPORTATE**
+La checksum è sembra essere uguale per tutti e sembra essere un calcolo di una XOR ma allo stesso tempo gli unici opcode dove tale funzione sembra essere differente **Opcode 100 e 101**.
 
 - Considera che ci sono per **Opcode 100 e 101** una serie di varianti nel senso che nel codice se l'opcode è 100 o 101 può anche presentarsi una valutazione differente riportata da riga 507 del file e.java. 
 - Altra valutazione riguarda l'**Opcode 102** con "variabile" che può rappresentare ad esempio calibrazione gps o magnetica e in quel caso sono numeri specifici. 
