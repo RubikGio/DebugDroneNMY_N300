@@ -18,15 +18,8 @@ Questa la pseudo struttura, da questa vado ad analizzare ogni opcode che signifi
 
 | Opcode(Hex) | Decimale | Funzionalità | Pseudo costruzione del pacchetto | Riga di riferimento nel codice |
 | -----------: | -------- | ------------ | -------------------------------- | ------------------------------ |
-|     0x64     |    100   | Suppongo sia una funzionalità di handshaking oppure keep alive | 70-72-60-100-1-0-1-check |riga 42 file 2.java|
+| 0x64|100| Suppongo sia una funzionalità di handshaking oppure keep alive | 70-72-60-100-1-0-1-check |riga 42 file 2.java|
 
 
-|  | Campo | Tipo/Len | Endianness | Valori noti | Note |
-|------:|------|----------|------------|-------------|------|
-| 0x00  | Header | u8/u16 | — | — | opzionale |
-| 0x??  | Opcode | u8 | — | 0xNN | opcode del pacchetto |
-| 0x??  | Lunghezza | u8/u16 | LE/BE | — | totale o payload |
-| 0x??  | Payload | bytes | — | — | vedi sotto |
-| 0x??  | Checksum/CRC | u8/u16/u32 | — | — | se presente |
 
 
