@@ -16,7 +16,7 @@ Ho identificato la struttura del pacchetto a livello genrico e cosa invia l'uten
 
 Questa la pseudo struttura, da questa vado ad analizzare ogni opcode che significato dovrebbe avere sempre in base a quanto letto dal codice:
 
-| Opcode (Hex) | Decimale | Funzionalità | Pseudo costruzione del pacchetto | Riga di riferimento nel codice |
+| Opcode(Hex) | Decimale | Funzionalità | Pseudo costruzione del pacchetto | Riga di riferimento nel codice |
 | -----------: | -------- | ------------ | -------------------------------- | ------------------------------ |
 |     0x64     |    100   | Suppongo sia una funzionalità di handshaking oppure keep alive | 70-72-60-100-1-0-1-check |riga 42 file 2.java|
 
