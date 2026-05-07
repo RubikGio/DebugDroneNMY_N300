@@ -4,13 +4,11 @@ Debug del protocollo di comunicazione del drone NMY_N300 la cui comunicazione è
 # Analisi di come arrivare al debug
 La scelta per svolgere il debug è stata considerare l'applicazione ` Rx_Drone ` recuperare l'APK e con un decompilatore estrarre tutto il codice. A quel punto avendo poche informazioni a riguardo le ho usate sul codice con un agente AI che mi ha aiutato con il debug dell'applicazione riuscendo a trovare delle informazioni utili che di seguito vado a riportare.
 
-# Analisi
-
-Pacchetti analizzati **User-to-Drone**
+# Analisi comunicazione App-Drone
 
 Ho identificato la struttura del pacchetto a livello genrico e cosa invia l'utente al drone per comunicare:
 
-| byte 1 | byte 2 | byte 3| byte 4 | byte 5-6 | byte payload | byte finale |
+| byte 0 | byte 1 | byte 2| byte 3 | byte 4-5 | byte payload | byte finale |
 | -----: | ------ | ----- | ------ | -------- | ------------ | ----------- |
 |  0x46  |  0x48  |  0x3C | opcode | lenght payload  | payload | checksum |
 
@@ -43,4 +41,31 @@ La checksum è uguale per tutti e sembra essere un calcolo di una XOR ma allo st
 - Per **Opcode 109** mi sembra molto simile a quanto visto per il precedente opcode però questo vedo che immette comandi di latitudine e longitudine.
 - Per **Opcode 110** usata in combinazione con qualche altra funzione ma come descritto prevede di circondare il soggetto.
 
+# Analisi della comunicazione Drone-App
 
+La struttura del pacchetto a livello generico della telemetria è la seguente:
+
+| Campo del frame | Significato della frame | 
+| ---------------:| ----------------------- |
+| byte 0 | Primo byte identificativo che permette di segnare il pacchetto e sarebbe 0x46 |
+| byte 1 | Secondo byte è un altro identificativo che permette di segnare il pacchetto 0x48 | 
+| byte 2 | Terzo byte è l'ultimo identificativo che permette di segnare il pacchetto 0x3E | 
+| byte 3 | Quarto byte rispedisce all'app l'opcode che si sta eseguendo e quindi il tipo di operazione in cui ci troviamo probabilmente | 
+| byte 4-5 | Quinto e sesto byte vanno ad identificare in realtà quello che sarbebe la grandezza del payload, viene usato solo uno dei due in teoria se la lunghezza è breve altrimenti entrambi | 
+| byte 6-7 | Rappresentano il rollio a destra e il rollio a sinistra | 
+| byte 8-9 | Rappresentano il beccheggio avanti e indietro | 
+| byte 10-11 | Rappersentano l'imbardata o rotazione | 
+| byte 12 ultimi 4 bit | Viene fatta una divisione tra primi e ultimi 4 bit di questo byte, viene fatta una AND bit a bit tra i 4 bit e tutti 1 così da avere in output una maschera che assume significati di vario genere | 
+| byte 12 primi 4 bit | Anche in questo caso viene svolta una AND bit a bit che va ad identificare le azioni di volo intese come ritorno GPS o cose del genere | 
+| byte 13-14 | Questi rappresentano la velocità del drone e va a dividere il risultato per 10 | --> dubbio su questo valore 
+| byte 15 | Rappresenta la velocità del drone che viene poi divisia per 10 | 
+| byte 16-17 | Rappresenta la quota/altezza |
+| byte 18 | Rappresenta la velocità vertiale del drone |
+| byte 19 | Ha una duplice funzionalità, la prima è indicare il numero di satelliti agganciati, la seconda gestione riguarda lo stato della batteria, si va a spacchettare il byte se il primo bit è 1 c'è un allarme batteria grave, se invece il secondo bit è 1 allora l'allarme batteria è lieve | 
+| byte 20 | È un campo dove si vanno a leggere i bit per confermare lo stato dei sensori quali barometro, bussola, giroscopio e poi l'ultimo bit ossia 7 se pari a 0 è in mod casalinga con il sensore ottico altrimenit se pari a 1 sta usando il GPS. | 
+| byte 21-28 | Rappresenta dal byte 21 a 24 le coordintate che vengono unite in un unico numero a 32 bit diviso per 10 milioni per ottenere longitudine e latitudine, analogamente per i byte da 25 a 28. | 
+| byte 29 | Sembra essere un byte speciale di telemetria la cui utilità è ignota | 
+| byte 30-31 | È ignoto dai file la presenza di questi byte | 
+
+- **Byte 12 utlimi 4 bit**: **0** la maschera significa _Operazione Manuale_, **1** significa _Hovering/Sospensione_, **2** significa _Decollo_, **3** significa _Atterraggio_, **4** significa _Ritorno a casa_, **5** significa _Volo a Wayppoint_, **6** significa _Follow Me_, **7** significa _Volo circolare/orbita_, **8** significa _Volo Indoor/ Volo senza GPS_.
+- **Byte 30-31**: Questi byte non sono presenti di base nell'applicazione però sono presenti nei dati di telemetria che vengono scambiati e visti da wireshark.
