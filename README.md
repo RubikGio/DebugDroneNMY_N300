@@ -32,7 +32,8 @@ Questa la pseudo struttura, da questa vado ad analizzare ogni opcode che signifi
 La checksum è uguale per tutti e sembra essere un calcolo di una XOR ma allo stesso tempo gli unici opcode dove tale funzione sembra essere differente **Opcode 100 e 101**.
 
 - Considera che ci sono per **Opcode 100 e 101** una serie di varianti nel senso che nel codice se l'opcode è 100 o 101 può anche presentarsi una valutazione differente riportata da riga 507 del file e.java. 
-- Altra valutazione riguarda l'**Opcode 102** con "variabile" che può rappresentare ad esempio calibrazione gps o magnetica e in quel caso sono numeri specifici. 
+- Altra valutazione riguarda l'**Opcode 102** con "variabile" che può rappresentare ad esempio calibrazione gps o magnetica e in quel caso sono numeri specifici.
+- Per **Opcode 103** quello che avviene è banalmente l'attivazione o toggle dell'avvio dei motori.
 - Per **Opcode 104** è da ben valutare tutta il vero uso ci sono valori multipli per un valore Y che non è ben chiaro ancora cosa sia ma che può assumere valori molteplici da inserire nel payload. 
 - Per **Opcode 105** il valore di comando sembrerebbe assumere tre possibili valori, _0 = non fine_, _1 = GPS mode_, _2 = opticalFlow mode_.
 - Per **Opcode 106** sarebbero i veri comandi di volo da inviare al drone con tutte le informazioni necessarie, da valutare se i campi da riportati sono corretti.
@@ -69,3 +70,10 @@ La struttura del pacchetto a livello generico della telemetria è la seguente:
 
 - **Byte 12 utlimi 4 bit**: **0** la maschera significa _Operazione Manuale_, **1** significa _Hovering/Sospensione_, **2** significa _Decollo_, **3** significa _Atterraggio_, **4** significa _Ritorno a casa_, **5** significa _Volo a Wayppoint_, **6** significa _Follow Me_, **7** significa _Volo circolare/orbita_, **8** significa _Volo Indoor/ Volo senza GPS_.
 - **Byte 30-31**: Questi byte non sono presenti di base nell'applicazione però sono presenti nei dati di telemetria che vengono scambiati e visti da wireshark.
+
+# Operazioni per l'avvio del drone 
+Affinché avvenga la comunicazione con il drone un'idea potrebbe essere eseguire questi step affinché si possa comandare tramite ad esempio uno script python:
+
+- _Fase di connessione_: Nella fase di connesione bisogna istanziare una comunicazione UDP con una socket e fare in modo di connettersi alla rete wifi del drone, il pacchetto da inviare per essere sicuri della connessione che si sta istanziando sarebbe **0x46, 0x48, 0x3C, 0x65, 0x01, 0x00, 0x01, 0x65**.
+- _Definizione della mod di volo_: In questa fase si deve definire una modalità di volo del dispositivo e pertanto la costruzione del pacchetto deve essere la seguente **0x46, 0x48, 0x3C, 0x69, 0x01, 0x00, 0x02, checksum**.
+- _Toggle del lucchetto di volo_: In questa fasse si devono per così dire sbloccare i motori e avviarli per tale motivo la costruzione del pacchetto è la seguente, **0x46, 0x48, 0x3C, 0x67, 0x01, 0x00, 0x01, checksum**.
