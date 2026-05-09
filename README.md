@@ -36,7 +36,7 @@ La checksum è uguale per tutti e sembra essere un calcolo di una XOR ma allo st
 - Per **Opcode 103** quello che avviene è banalmente l'attivazione o toggle dell'avvio dei motori.
 - Per **Opcode 104** è da ben valutare tutta il vero uso ci sono valori multipli per un valore Y che non è ben chiaro ancora cosa sia ma che può assumere valori molteplici da inserire nel payload. 
 - Per **Opcode 105** il valore di comando sembrerebbe assumere tre possibili valori, _0 = non fine_, _1 = GPS mode_, _2 = opticalFlow mode_.
-- Per **Opcode 106** sarebbero i veri comandi di volo da inviare al drone con tutte le informazioni necessarie, da valutare se i campi da riportati sono corretti.
+- Per **Opcode 106** sarebbero i veri comandi di volo da inviare al drone con tutte le informazioni necessarie, da valutare se i campi riportati sono corretti.
 - Per **Opcode 107** serve a definire delle coordinate da riferire, attenzione che per leggere le coordinate son due numeri da 16 bit quindi la lettura dei byte va due a due.
 - Per **Opcode 108** la lunghezza come si vede dalla costruzione è variabile mentre i valori del GPS usati nel payload dipendono appunto dalla grandezza precedentemente definita.
 - Per **Opcode 109** mi sembra molto simile a quanto visto per il precedente opcode però questo vedo che immette comandi di latitudine e longitudine.
@@ -76,4 +76,10 @@ Affinché avvenga la comunicazione con il drone un'idea potrebbe essere eseguire
 
 - _Fase di connessione_: Nella fase di connesione bisogna istanziare una comunicazione UDP con una socket e fare in modo di connettersi alla rete wifi del drone, il pacchetto da inviare per essere sicuri della connessione che si sta istanziando sarebbe **0x46, 0x48, 0x3C, 0x65, 0x01, 0x00, 0x01, 0x65**.
 - _Definizione della mod di volo_: In questa fase si deve definire una modalità di volo del dispositivo e pertanto la costruzione del pacchetto deve essere la seguente **0x46, 0x48, 0x3C, 0x69, 0x01, 0x00, 0x02, checksum**.
-- _Toggle del lucchetto di volo_: In questa fasse si devono per così dire sbloccare i motori e avviarli per tale motivo la costruzione del pacchetto è la seguente, **0x46, 0x48, 0x3C, 0x67, 0x01, 0x00, 0x01, checksum**.
+- _Toggle del lucchetto di volo_: In questa fase si devono per così dire sbloccare i motori e avviarli per tale motivo la costruzione del pacchetto è la seguente, **0x46, 0x48, 0x3C, 0x67, 0x01, 0x00, 0x01, checksum**.
+
+# Attivazione dei comandi di volo 
+Una volta aver avviato motori e settato la modalità di interesse del drone la cosa da fare e farlo alzare in volo, mentre per istanziare una connessione si mantiene una comunicazione di _keep alive_ costante, nel caso del volo va mantenuto l'opcode di volo in maniera costante e se non vi è variazione invierà sempre i valori di default, altrimenti quelli che prende in input dal controller di volo:
+
+- _Definizione del pacchetto di volo_: In questa fase va utilizzato come opcode 106, **0x46, 0x48, 0x3C, 0x6A, 0x04, 0x00, rollio, beccheggio, gas, imbardata, check**
+
