@@ -56,7 +56,7 @@ La struttura del pacchetto a livello generico della telemetria è la seguente:
 | byte 6-7 | Rappresentano il rollio a destra e il rollio a sinistra | 
 | byte 8-9 | Rappresentano il beccheggio avanti e indietro | 
 | byte 10-11 | Rappersentano l'imbardata o rotazione | 
-| byte 12 ultimi 4 bit | Viene fatta una divisione tra primi e ultimi 4 bit di questo byte, viene fatta una AND bit a bit tra i 4 bit e tutti 1 così da avere in output una maschera che assume significati di vario genere | 
+| byte 12 ultimi 4 bit | Viene fatta una divisione tra primi e ultimi 4 bit di questo byte, viene fatta una AND bit a bit tra i 4 bit e tutti 1 così da avere in output una maschera che assume significati di vario genere, se _0000_ allora significa che i motori non sono armati, se pari a _0001_ allora significa ad esempio motori armati | 
 | byte 12 primi 4 bit | Anche in questo caso viene svolta una AND bit a bit che va ad identificare le azioni di volo intese come ritorno GPS o cose del genere | 
 | byte 13-14 | Questi rappresentano la velocità del drone e va a dividere il risultato per 10 | --> dubbio su questo valore 
 | byte 15 | Rappresenta la velocità del drone che viene poi divisia per 10 | 
@@ -68,7 +68,7 @@ La struttura del pacchetto a livello generico della telemetria è la seguente:
 | byte 29 | Sembra essere un byte speciale di telemetria la cui utilità è ignota | 
 | byte 30-31 | È ignoto dai file la presenza di questi byte | 
 
-- **Byte 12 utlimi 4 bit**: **0** la maschera significa _Operazione Manuale_, **1** significa _Hovering/Sospensione_, **2** significa _Decollo_, **3** significa _Atterraggio_, **4** significa _Ritorno a casa_, **5** significa _Volo a Wayppoint_, **6** significa _Follow Me_, **7** significa _Volo circolare/orbita_, **8** significa _Volo Indoor/ Volo senza GPS_.
+- **Byte 12 primi 4 bit**: Preliminarmente viene fatto uno shift a destra di 4 e fatta una AND con una maschera di tutti 1 --> **0** la maschera significa _Operazione Manuale_, **1** significa _Hovering/Sospensione_, **2** significa _Decollo_, **3** significa _Atterraggio_, **4** significa _Ritorno a casa_, **5** significa _Volo a Wayppoint_, **6** significa _Follow Me_, **7** significa _Volo circolare/orbita_, **8** significa _Volo Indoor/ Volo senza GPS_.
 - **Byte 30-31**: Questi byte non sono presenti di base nell'applicazione però sono presenti nei dati di telemetria che vengono scambiati e visti da wireshark.
 
 # Operazioni per l'avvio del drone 
@@ -82,4 +82,9 @@ Affinché avvenga la comunicazione con il drone un'idea potrebbe essere eseguire
 Una volta aver avviato motori e settato la modalità di interesse del drone la cosa da fare e farlo alzare in volo, mentre per istanziare una connessione si mantiene una comunicazione di _keep alive_ costante, nel caso del volo va mantenuto l'opcode di volo in maniera costante e se non vi è variazione invierà sempre i valori di default, altrimenti quelli che prende in input dal controller di volo:
 
 - _Definizione del pacchetto di volo_: In questa fase va utilizzato come opcode 106, **0x46, 0x48, 0x3C, 0x6A, 0x04, 0x00, rollio, beccheggio, gas, imbardata, check**
+
+# Lettura della telemetria 
+La lettura della telemetria è utile per ottenere una serie di informazioni che sono riportate in tabella nella sezione superiore, nonostante ciò è utile osservare i cambi del payload e dei singoli byte:
+
+- **Byte 12**: Scenari di interesse posso essere due in particolare, motori **non attivi** significa in pratica che il byte 12 sarà con gli ultimi 4 bit del byte pari a 0, da vari dump usando solo optical flow sarà **0x10** (_0001 0000_). Secondo scenario con motori **attivi** signficia in pratica che il byte 12 sarà con l'ultimo bit pari a 1, da vari dump usando solo optical flow sarà **0x81** (_1000 0001_).
 
