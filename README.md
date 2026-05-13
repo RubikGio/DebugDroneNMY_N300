@@ -1,20 +1,6 @@
 # DebugDroneNMY_N300
 Debug del protocollo di comunicazione del drone NMY_N300 la cui comunicazione è tra drone e cellulare.
 
-# Mappa comandi (tastiera)
-
-- W / S: throttle su/giu (altezza)
-- A / D: yaw sinistra/destra (imbardata)
-- Frecce su/giu: pitch avanti/indietro (beccheggio)
-- Frecce sinistra/destra: roll sinistra/destra (rollio)
-- Spazio: reset emergenza (tutti i canali a 128)
-- M: attiva invio comandi di volo
-- N: disattiva invio comandi di volo
-- U: toggle arm (sblocco motori)
-- G: modalita GPS
-- O: modalita Optical Flow
-- Q: uscita
-
 # Analisi di come arrivare al debug
 La scelta per svolgere il debug è stata considerare l'applicazione ` Rx_Drone ` recuperare l'APK e con un decompilatore estrarre tutto il codice. A quel punto avendo poche informazioni a riguardo le ho usate sul codice con un agente AI che mi ha aiutato con il debug dell'applicazione riuscendo a trovare delle informazioni utili che di seguito vado a riportare.
 
@@ -102,3 +88,16 @@ La lettura della telemetria è utile per ottenere una serie di informazioni che 
 
 - **Byte 12**: Scenari di interesse posso essere due in particolare, motori **non attivi** significa in pratica che il byte 12 sarà con gli ultimi 4 bit del byte pari a 0, da vari dump usando solo optical flow sarà **0x10** (_0001 0000_). Secondo scenario con motori **attivi** signficia in pratica che il byte 12 sarà con l'ultimo bit pari a 1, da vari dump usando solo optical flow sarà **0x81** (_1000 0001_).
 
+# Mappa comandi (tastiera)
+
+- W / S: throttle su/giu (altezza)
+- A / D: yaw sinistra/destra (imbardata)
+- Frecce su/giu: pitch avanti/indietro (beccheggio)
+- Frecce sinistra/destra: roll sinistra/destra (rollio)
+- Spazio: reset emergenza (tutti i canali a 128)
+- M: attiva invio comandi di volo
+- N: disattiva invio comandi di volo
+- U: toggle arm (sblocco motori)
+- G: modalita GPS
+- O: modalita Optical Flow
+- Q: uscita
